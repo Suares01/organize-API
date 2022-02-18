@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - ${DB_PORT}:27017
+    environment:
+      - MONGO_INITDB_DATABASE=${DB_NAME}
+    volumes:
+      - dbdata:/data/db
+
+volumes:
+  dbdata:
+    driver: local
