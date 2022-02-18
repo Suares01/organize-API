@@ -3,7 +3,12 @@ export type Logger = {
   level: string;
 };
 
+export type Database = {
+  uri: string;
+};
+
 export type App = {
   port: number;
+  database: Database;
   logger: Logger;
 };
