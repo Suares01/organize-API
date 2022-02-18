@@ -1,3 +1,5 @@
+import "reflect-metadata";
+import "@src/shared/container/index";
 import bodyParser from "body-parser";
 import config from "config";
 import expressPino from "express-pino-logger";
@@ -6,7 +8,9 @@ import * as http from "http";
 import { Logger } from "@config/types";
 import { Server } from "@overnightjs/core";
 
+import * as database from "./database/index";
 import logger from "./logger/logger";
+import { UsersController } from "./modules/users/controller/UsersController";
 
 export class SetupServer extends Server {
   constructor(private port = config.get<number>("App.port")) {
@@ -19,6 +23,8 @@ export class SetupServer extends Server {
 
   public async initServer(): Promise<void> {
     this.setupExpress();
+    this.setupControllers();
+    await this.setupDatabase();
   }
 
   private setupExpress(): void {
@@ -31,6 +37,14 @@ export class SetupServer extends Server {
     );
   }
 
+  private setupControllers(): void {
+    this.addControllers([new UsersController()]);
+  }
+
+  private async setupDatabase(): Promise<void> {
+    await database.connect();
+  }
+
   public start(): void {
     process.send?.("ready");
 
@@ -40,6 +54,8 @@ export class SetupServer extends Server {
   }
 
   public async close(): Promise<void> {
+    await database.disconnect();
+
     if (this.server) {
       await new Promise((resolve, reject) => {
         this.server?.close((error) => {
