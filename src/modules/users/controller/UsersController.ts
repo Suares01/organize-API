@@ -17,6 +17,14 @@ export class UsersController {
       created_at: createdAt,
     } = await container.resolve(CreateUserUseCase).execute(username, password);
 
-    return res.status(201).send({ id, username: name, created_at: createdAt });
+    return res.status(201).send(
+      JSON.parse(
+        JSON.stringify({
+          id,
+          username: name,
+          created_at: createdAt,
+        })
+      )
+    );
   }
 }
