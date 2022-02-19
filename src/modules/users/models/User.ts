@@ -18,7 +18,7 @@ const schema = new Schema<IUserModel>(
   {
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    created_at: { type: Date },
+    created_at: { type: Date, default: new Date() },
   },
   {
     toJSON: {
