@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import "@src/shared/container/index";
+import "express-async-errors";
 import bodyParser from "body-parser";
 import config from "config";
 import expressPino from "express-pino-logger";
@@ -10,6 +11,8 @@ import { Server } from "@overnightjs/core";
 
 import * as database from "./database/index";
 import logger from "./logger/logger";
+import { errorHandler } from "./middleware/error/errorHandler";
+import { mongooseErrorHandler } from "./middleware/error/mongooseErrorHandler";
 import { UsersController } from "./modules/users/controller/UsersController";
 
 export class SetupServer extends Server {
@@ -25,6 +28,7 @@ export class SetupServer extends Server {
     this.setupExpress();
     this.setupControllers();
     await this.setupDatabase();
+    this.setupErrorHandler();
   }
 
   private setupExpress(): void {
@@ -43,6 +47,11 @@ export class SetupServer extends Server {
 
   private async setupDatabase(): Promise<void> {
     await database.connect();
+  }
+
+  private setupErrorHandler(): void {
+    this.app.use(mongooseErrorHandler);
+    this.app.use(errorHandler);
   }
 
   public start(): void {
