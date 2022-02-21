@@ -1,5 +1,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
+import { hashData } from "@src/shared/util/hash";
+
 export interface IUser {
   id?: string;
   username: string;
@@ -42,5 +44,13 @@ schema.path("username").validate(
   "already exists",
   CustomValidation.duplicated
 );
+
+schema.pre<IUserModel>("save", async function (): Promise<void> {
+  if (!this.password || !this.isModified("password")) return;
+
+  const hashedPass = await hashData(this.password);
+
+  this.password = hashedPass;
+});
 
 export const User: Model<IUserModel> = mongoose.model("User", schema);
