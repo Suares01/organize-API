@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
+import { CustomValidation } from "@modules/users/models/User";
 import logger from "@src/logger/logger";
-import { CustomValidation } from "@src/modules/users/models/User";
 
 export class ErrorUtil {
   public static handleValidationError(error: mongoose.Error.ValidationError): {

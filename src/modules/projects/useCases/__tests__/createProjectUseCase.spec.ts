@@ -1,12 +1,9 @@
-import { ProjectsRepository } from "@src/modules/projects/repositories/implementations/ProjectsRepository";
+import { IProjectDto } from "@modules/projects/dtos/IProjectDto";
+import { IProject } from "@modules/projects/models/Project";
+import { ProjectsRepository } from "@modules/projects/repositories/implementations/ProjectsRepository";
+import { CreateProjectUseCase } from "@modules/projects/useCases/CreateProjectUseCase";
 
-import { IProjectDto } from "../../dtos/IProjectDto";
-import { IProject } from "../../models/Project";
-import { CreateProjectUseCase } from "../CreateProjectUseCase";
-
-jest.mock(
-  "@src/modules/projects/repositories/implementations/ProjectsRepository"
-);
+jest.mock("@modules/projects/repositories/implementations/ProjectsRepository");
 
 describe("Create Project Use Case tests", () => {
   const mockedProjectsRepository =

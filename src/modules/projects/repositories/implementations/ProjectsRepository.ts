@@ -1,6 +1,6 @@
-import { IProjectDto } from "../../dtos/IProjectDto";
-import { IProject, Project } from "../../models/Project";
-import { IProjectsRepository } from "../IProjectsRepository";
+import { IProjectDto } from "@modules/projects/dtos/IProjectDto";
+import { IProject, Project } from "@modules/projects/models/Project";
+import { IProjectsRepository } from "@modules/projects/repositories/IProjectsRepository";
 
 export class ProjectsRepository implements IProjectsRepository {
   async insert(data: IProjectDto): Promise<IProject> {

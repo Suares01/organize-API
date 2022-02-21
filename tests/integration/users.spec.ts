@@ -1,5 +1,5 @@
-import { IUser, User } from "@src/modules/users/models/User";
-import { UsersRepository } from "@src/modules/users/repositories/implementations/UsersRepository";
+import { IUser, User } from "@modules/users/models/User";
+import { UsersRepository } from "@modules/users/repositories/implementations/UsersRepository";
 import { IApiErrorResponse } from "@src/shared/errors/IApiError";
 
 describe("User integration tests", () => {

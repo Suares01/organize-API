@@ -1,4 +1,4 @@
-import { IUser, User } from "@src/modules/users/models/User";
+import { IUser, User } from "@modules/users/models/User";
 
 import { IUsersRepository } from "../IUsersRepository";
 

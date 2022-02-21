@@ -1,6 +1,6 @@
-import { IProjectDto } from "../dtos/IProjectDto";
-import { IProject } from "../models/Project";
-import { IProjectsRepository } from "../repositories/IProjectsRepository";
+import { IProjectDto } from "@modules/projects/dtos/IProjectDto";
+import { IProject } from "@modules/projects/models/Project";
+import { IProjectsRepository } from "@modules/projects/repositories/IProjectsRepository";
 
 export class CreateProjectUseCase {
   constructor(private projectsRepository: IProjectsRepository) {}

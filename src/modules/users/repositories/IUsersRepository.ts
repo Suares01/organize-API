@@ -1,4 +1,4 @@
-import { IUser } from "../models/User";
+import { IUser } from "@modules/users/models/User";
 
 export interface IUsersRepository {
   insert(username: string, password: string): Promise<IUser>;

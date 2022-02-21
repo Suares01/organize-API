@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 
+import { CreateUserUseCase } from "@modules/users/useCases/CreateUserUseCase";
 import { Controller, Post } from "@overnightjs/core";
-
-import { CreateUserUseCase } from "../useCases/CreateUserUseCase";
 
 @Controller("users")
 export class UsersController {
