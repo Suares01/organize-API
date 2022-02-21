@@ -7,6 +7,7 @@ const config: import("@jest/types").Config.InitialOptions = {
   testMatch: ["<rootDir>/**/*.spec.ts"],
   moduleNameMapper: {
     "@src/(.*)": "<rootDir>/../src/$1",
+    "@modules/(.*)": "<rootDir>/../src/modules/$1",
     "@config/(.*)": "<rootDir>/../config/$1",
     "@tests/(.*)": "<rootDir>/$1",
   },
