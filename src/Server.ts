@@ -7,13 +7,14 @@ import expressPino from "express-pino-logger";
 import * as http from "http";
 
 import { Logger } from "@config/types";
+import { ProjectsController } from "@modules/projects/controller/ProjectsController";
+import { UsersController } from "@modules/users/controller/UsersController";
 import { Server } from "@overnightjs/core";
 
 import * as database from "./database/index";
 import logger from "./logger/logger";
 import { errorHandler } from "./middleware/error/errorHandler";
 import { mongooseErrorHandler } from "./middleware/error/mongooseErrorHandler";
-import { UsersController } from "./modules/users/controller/UsersController";
 
 export class SetupServer extends Server {
   constructor(private port = config.get<number>("App.port")) {
@@ -42,7 +43,7 @@ export class SetupServer extends Server {
   }
 
   private setupControllers(): void {
-    this.addControllers([new UsersController()]);
+    this.addControllers([new UsersController(), new ProjectsController()]);
   }
 
   private async setupDatabase(): Promise<void> {
