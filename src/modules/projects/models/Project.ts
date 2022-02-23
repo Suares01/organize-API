@@ -14,7 +14,7 @@ export interface IProjectModel extends Omit<IProject, "id">, Document {}
 
 const schema = new Schema(
   {
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     path: { type: String, required: true },
     user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
     created_at: { type: Date, default: new Date() },
@@ -28,18 +28,6 @@ const schema = new Schema(
       },
     },
   }
-);
-
-schema.path("name").validate(
-  async function (name: string) {
-    const nameCount = await mongoose.models.Project.countDocuments({
-      name,
-    });
-
-    return !nameCount;
-  },
-  "already exists",
-  CustomValidation.duplicated
 );
 
 export const Project: Model<IProjectModel> = mongoose.model("Project", schema);
