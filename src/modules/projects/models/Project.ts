@@ -1,7 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-import { CustomValidation } from "@src/modules/users/models/User";
-
 export interface IProject {
   id?: string;
   name: string;
