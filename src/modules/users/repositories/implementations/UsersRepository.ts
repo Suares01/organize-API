@@ -1,6 +1,6 @@
 import { IUser, User } from "@modules/users/models/User";
 
-import { IUsersRepository } from "../IUsersRepository";
+import { IFindUser, IUsersRepository } from "../IUsersRepository";
 
 export class UsersRepository implements IUsersRepository {
   public async insert(username: string, password: string): Promise<IUser> {
@@ -11,9 +11,19 @@ export class UsersRepository implements IUsersRepository {
     return user;
   }
 
-  public async findOne(username: string): Promise<IUser | null> {
-    const user = await User.findOne({ username }).exec();
+  public async findOne({ id, username }: IFindUser): Promise<IUser | null> {
+    if (username) {
+      const user = await User.findOne({ username }).exec();
 
-    return user;
+      return user;
+    }
+
+    if (id) {
+      const user = await User.findOne({ id }).exec();
+
+      return user;
+    }
+
+    return null;
   }
 }
