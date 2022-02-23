@@ -14,6 +14,7 @@ import { Server } from "@overnightjs/core";
 import * as database from "./database/index";
 import logger from "./logger/logger";
 import { errorHandler } from "./middleware/error/errorHandler";
+import { internalErrorHandler } from "./middleware/error/internalErrorHandler";
 import { mongooseErrorHandler } from "./middleware/error/mongooseErrorHandler";
 
 export class SetupServer extends Server {
@@ -52,6 +53,7 @@ export class SetupServer extends Server {
 
   private setupErrorHandler(): void {
     this.app.use(mongooseErrorHandler);
+    this.app.use(internalErrorHandler);
     this.app.use(errorHandler);
   }
 
