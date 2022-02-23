@@ -5,6 +5,8 @@ import { IApiErrorResponse } from "@src/shared/errors/IApiError";
 describe("User integration tests", () => {
   beforeEach(async () => await User.deleteMany());
 
+  afterAll(async () => await User.deleteMany());
+
   const newUser = {
     username: "John Doe",
     password: "123456",
@@ -20,7 +22,9 @@ describe("User integration tests", () => {
         id,
         username,
         created_at: createdAt,
-      } = (await new UsersRepository().findOne(newUser.username)) as IUser;
+      } = (await new UsersRepository().findOne({
+        username: newUser.username,
+      })) as IUser;
 
       expect(status).toBe(201);
       expect(body).toEqual(
@@ -59,6 +63,60 @@ describe("User integration tests", () => {
         error: "Unprocessable Entity",
         message:
           "User validation failed: username: Path `username` is required.",
+      });
+    });
+  });
+
+  describe("when authenticate a user", () => {
+    it("should generate a token for a valid user", async () => {
+      await new User(newUser).save();
+
+      const { body, status } = await global.testRequest
+        .post("/users/authenticate")
+        .send({
+          username: newUser.username,
+          password: newUser.password,
+        });
+
+      expect(status).toBe(200);
+      expect(body).toEqual({
+        token: expect.any(String),
+      });
+    });
+
+    it("should return unauthorized if the username isn't found", async () => {
+      await new User(newUser).save();
+
+      const { body, status } = await global.testRequest
+        .post("/users/authenticate")
+        .send({
+          username: "invalid_user_name",
+          password: newUser.password,
+        });
+
+      expect(status).toBe(401);
+      expect(body).toEqual<IApiErrorResponse>({
+        code: 401,
+        error: "Unauthorized",
+        message: "username or password incorrect",
+      });
+    });
+
+    it("should return unauthorized if the password given by the user is incorrect", async () => {
+      await new User(newUser).save();
+
+      const { body, status } = await global.testRequest
+        .post("/users/authenticate")
+        .send({
+          username: newUser.username,
+          password: "incorrect_pass",
+        });
+
+      expect(status).toBe(401);
+      expect(body).toEqual<IApiErrorResponse>({
+        code: 401,
+        error: "Unauthorized",
+        message: "username or password incorrect",
       });
     });
   });
