@@ -4,6 +4,9 @@ import { container } from "tsyringe";
 import { CreateUserUseCase } from "@modules/users/useCases/CreateUserUseCase";
 import { Controller, Post } from "@overnightjs/core";
 
+import { IUserDto } from "../dtos/IUserDto";
+import { AuthenticateUserUseCase } from "../useCases/AuthenticateUserUseCase";
+
 @Controller("users")
 export class UsersController {
   @Post("")
@@ -25,5 +28,18 @@ export class UsersController {
         })
       )
     );
+  }
+
+  @Post("authenticate")
+  async authenticate(req: Request, res: Response): Promise<Response> {
+    const { password, username } = req.body as IUserDto;
+
+    const token = await container
+      .resolve(AuthenticateUserUseCase)
+      .execute({ username, password });
+
+    return res.status(200).send({
+      token,
+    });
   }
 }
