@@ -11,8 +11,11 @@ export class ProjectsRepository implements IProjectsRepository {
     return project;
   }
 
-  async findOne(name: string): Promise<IProject | null> {
-    const project = await Project.findOne({ name });
+  async findOne(data: IProjectDto): Promise<IProject | null> {
+    const project = await Project.findOne({
+      name: data.name,
+      id: data.user_id,
+    });
 
     return project;
   }
