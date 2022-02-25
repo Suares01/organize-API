@@ -14,7 +14,7 @@ export class ProjectsRepository implements IProjectsRepository {
   async findOne(data: IProjectDto): Promise<IProject | null> {
     const project = await Project.findOne({
       name: data.name,
-      id: data.user_id,
+      user_id: data.user_id,
     });
 
     return project;
