@@ -14,24 +14,16 @@ describe("User integration tests", () => {
     path: "path/example",
   };
 
-  const newProjectWithId: IProjectDto = {
-    name: "new-api",
-    path: "path/example",
-    user_id: "",
+  const defalutUser: IUserDto = {
+    username: "Jhon Doe",
+    password: "123",
   };
 
   beforeEach(async () => {
     await Project.deleteMany();
     await User.deleteMany();
 
-    const defalutUser: IUserDto = {
-      username: "Jhon Doe",
-      password: "123",
-    };
-
     const user = await new User(defalutUser).save();
-
-    newProjectWithId.user_id = user.id;
 
     token = await generateJwt(
       {
@@ -52,12 +44,38 @@ describe("User integration tests", () => {
 
   describe("when creating a new project", () => {
     it("shoud successfully create a new project", async () => {
+      const defalutUser: IUserDto = {
+        username: "Jhon Doe 2",
+        password: "123",
+      };
+
+      const user = await new User(defalutUser).save();
+
+      const newProject: IProjectDto = {
+        name: "new-api",
+        path: "path/example",
+      };
+
+      const JhonDoetoken = await generateJwt(
+        {
+          username: user.username,
+          created_at: user.created_at,
+        },
+        {
+          subject: user.id,
+          expiresIn: "1d",
+        }
+      );
+
       const { body, status } = await global.testRequest
         .post("/projects")
-        .set({ "x-access-token": token })
+        .set({ "x-access-token": JhonDoetoken })
         .send(newProject);
 
-      const project = await new ProjectsRepository().findOne(newProject);
+      const project = await new ProjectsRepository().findOne({
+        ...newProject,
+        user_id: user.id,
+      });
 
       expect(status).toBe(201);
       expect(body).toEqual(JSON.parse(JSON.stringify(project)));
@@ -95,6 +113,45 @@ describe("User integration tests", () => {
         error: "Unprocessable Entity",
         message: "Project validation failed: name: Path `name` is required.",
       });
+    });
+
+    it("different users can create a project with the same name", async () => {
+      const paul = await new User({
+        username: "Paul",
+        password: "123",
+      }).save();
+
+      const jack = await new User({
+        username: "Jack",
+        password: "123",
+      }).save();
+
+      const paulToken = await generateJwt(
+        { username: paul.username },
+        { subject: paul.id }
+      );
+
+      const jackToken = await generateJwt(
+        { username: jack.username },
+        { subject: jack.id }
+      );
+
+      const { body: paulBody /* status: paulStatus */ } =
+        await global.testRequest
+          .post("/projects")
+          .set({ "x-access-token": paulToken })
+          .send(newProject);
+
+      const { body: jackBody /* status: jackStatus */ } =
+        await global.testRequest
+          .post("/projects")
+          .set({ "x-access-token": jackToken })
+          .send(newProject);
+
+      // expect(paulStatus && jackStatus).toBe(201);
+      expect(paulBody && jackBody).toEqual(
+        expect.objectContaining({ name: "new-api", path: "path/example" })
+      );
     });
   });
 });
