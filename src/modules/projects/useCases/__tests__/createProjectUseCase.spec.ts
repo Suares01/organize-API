@@ -4,7 +4,7 @@ import { IProjectDto } from "@modules/projects/dtos/IProjectDto";
 import { IProject } from "@modules/projects/models/Project";
 import { ProjectsRepository } from "@modules/projects/repositories/implementations/ProjectsRepository";
 import { CreateProjectUseCase } from "@modules/projects/useCases/CreateProjectUseCase";
-import { ConflictError } from "@src/shared/errors/internalErrors/ConflictError";
+import { ConflictError } from "@shared/errors/internalErrors/ConflictError";
 
 jest.mock("@modules/projects/repositories/implementations/ProjectsRepository");
 

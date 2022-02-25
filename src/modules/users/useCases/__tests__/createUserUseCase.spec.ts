@@ -1,11 +1,10 @@
 import "reflect-metadata";
 
-import { UsersRepository } from "@src/modules/users/repositories/implementations/UsersRepository";
+import { IUser } from "@modules/users/models/User";
+import { UsersRepository } from "@modules/users/repositories/implementations/UsersRepository";
+import { CreateUserUseCase } from "@modules/users/useCases/CreateUserUseCase";
 
-import { IUser } from "../../models/User";
-import { CreateUserUseCase } from "../CreateUserUseCase";
-
-jest.mock("@src/modules/users/repositories/implementations/UsersRepository");
+jest.mock("@modules/users/repositories/implementations/UsersRepository");
 
 describe("Create user use cases tests", () => {
   const mockedUsersRepository =

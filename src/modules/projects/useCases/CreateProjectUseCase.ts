@@ -3,7 +3,7 @@ import { inject, injectable } from "tsyringe";
 import { IProjectDto } from "@modules/projects/dtos/IProjectDto";
 import { IProject } from "@modules/projects/models/Project";
 import { IProjectsRepository } from "@modules/projects/repositories/IProjectsRepository";
-import { ConflictError } from "@src/shared/errors/internalErrors/ConflictError";
+import { ConflictError } from "@shared/errors/internalErrors/ConflictError";
 
 @injectable()
 export class CreateProjectUseCase {

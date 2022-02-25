@@ -1,6 +1,6 @@
 import { IUser, User } from "@modules/users/models/User";
 import { UsersRepository } from "@modules/users/repositories/implementations/UsersRepository";
-import { IApiErrorResponse } from "@src/shared/errors/IApiError";
+import { IApiErrorResponse } from "@shared/errors/IApiError";
 
 describe("User integration tests", () => {
   beforeEach(async () => await User.deleteMany());

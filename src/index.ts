@@ -1,4 +1,5 @@
-import logger from "./logger/logger";
+import logger from "@shared/logger/logger";
+
 import { SetupServer } from "./Server";
 
 const server = new SetupServer();

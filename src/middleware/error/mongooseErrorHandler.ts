@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 
-import { ApiError } from "@src/shared/errors/ApiError";
-import { ErrorUtil } from "@src/shared/errors/ErrorUtil";
+import { ApiError } from "@shared/errors/ApiError";
+import { ErrorUtil } from "@shared/errors/ErrorUtil";
 
 export function mongooseErrorHandler(
   error: unknown,

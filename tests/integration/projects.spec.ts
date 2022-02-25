@@ -3,8 +3,8 @@ import { Project } from "@modules/projects/models/Project";
 import { ProjectsRepository } from "@modules/projects/repositories/implementations/ProjectsRepository";
 import { IUserDto } from "@modules/users/dtos/IUserDto";
 import { User } from "@modules/users/models/User";
-import { IApiErrorResponse } from "@src/shared/errors/IApiError";
-import { generateJwt } from "@src/shared/util/token";
+import { IApiErrorResponse } from "@shared/errors/IApiError";
+import { generateJwt } from "@shared/util/token";
 
 describe("User integration tests", () => {
   let token: string;

@@ -1,6 +1,6 @@
 import supertest from "supertest";
 
-import { SetupServer } from "@src/Server";
+import { SetupServer } from "../src/Server";
 
 let server: SetupServer;
 

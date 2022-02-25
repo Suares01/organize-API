@@ -2,7 +2,7 @@ import config from "config";
 import mongoose, { Mongoose } from "mongoose";
 
 import { Database } from "@config/types";
-import logger from "@src/logger/logger";
+import logger from "@shared/logger/logger";
 
 const database = config.get<Database>("App.database");
 

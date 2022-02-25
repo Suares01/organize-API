@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { container } from "tsyringe";
 
-import { UsersRepository } from "@src/modules/users/repositories/implementations/UsersRepository";
-import { UnauthorizedError } from "@src/shared/errors/internalErrors/UnauthorizedError";
-import { verifyJwt } from "@src/shared/util/token";
+import { UsersRepository } from "@modules/users/repositories/implementations/UsersRepository";
+import { UnauthorizedError } from "@shared/errors/internalErrors/UnauthorizedError";
+import { verifyJwt } from "@shared/util/token";
 
 interface IPayLoad {
   sub: string;

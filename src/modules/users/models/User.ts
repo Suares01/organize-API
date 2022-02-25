@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-import { hashData } from "@src/shared/util/hash";
+import { hashData } from "@shared/util/hash";
 
 export interface IUser {
   id?: string;

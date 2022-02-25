@@ -1,11 +1,10 @@
 import { inject, injectable } from "tsyringe";
 
-import { UnauthorizedError } from "@src/shared/errors/internalErrors/UnauthorizedError";
-import { compareData } from "@src/shared/util/hash";
-import { generateJwt } from "@src/shared/util/token";
-
-import { IUserDto } from "../dtos/IUserDto";
-import { IUsersRepository } from "../repositories/IUsersRepository";
+import { IUserDto } from "@modules/users/dtos/IUserDto";
+import { IUsersRepository } from "@modules/users/repositories/IUsersRepository";
+import { UnauthorizedError } from "@shared/errors/internalErrors/UnauthorizedError";
+import { compareData } from "@shared/util/hash";
+import { generateJwt } from "@shared/util/token";
 
 @injectable()
 export class AuthenticateUserUseCase {

@@ -1,5 +1,5 @@
-import { ApiError } from "../errors/ApiError";
-import { IApiErrorResponse } from "../errors/IApiError";
+import { ApiError } from "@shared/errors/ApiError";
+import { IApiErrorResponse } from "@shared/errors/IApiError";
 
 describe("ApiError tests", () => {
   it("should format erros with mandatory fields", () => {

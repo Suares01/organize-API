@@ -1,6 +1,8 @@
 import { IUser, User } from "@modules/users/models/User";
-
-import { IFindUser, IUsersRepository } from "../IUsersRepository";
+import {
+  IFindUser,
+  IUsersRepository,
+} from "@modules/users/repositories/IUsersRepository";
 
 export class UsersRepository implements IUsersRepository {
   public async insert(username: string, password: string): Promise<IUser> {

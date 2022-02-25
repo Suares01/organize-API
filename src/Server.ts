@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import "@src/shared/container/index";
+import "@shared/container/index";
 import "express-async-errors";
 import bodyParser from "body-parser";
 import config from "config";
@@ -7,15 +7,15 @@ import expressPino from "express-pino-logger";
 import * as http from "http";
 
 import { Logger } from "@config/types";
+import { errorHandler } from "@middleware/error/errorHandler";
+import { internalErrorHandler } from "@middleware/error/internalErrorHandler";
+import { mongooseErrorHandler } from "@middleware/error/mongooseErrorHandler";
 import { ProjectsController } from "@modules/projects/controller/ProjectsController";
 import { UsersController } from "@modules/users/controller/UsersController";
 import { Server } from "@overnightjs/core";
+import logger from "@shared/logger/logger";
 
 import * as database from "./database/index";
-import logger from "./logger/logger";
-import { errorHandler } from "./middleware/error/errorHandler";
-import { internalErrorHandler } from "./middleware/error/internalErrorHandler";
-import { mongooseErrorHandler } from "./middleware/error/mongooseErrorHandler";
 
 export class SetupServer extends Server {
   constructor(private port = config.get<number>("App.port")) {

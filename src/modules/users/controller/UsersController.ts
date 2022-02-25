@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 
+import { IUserDto } from "@modules/users/dtos/IUserDto";
+import { AuthenticateUserUseCase } from "@modules/users/useCases/AuthenticateUserUseCase";
 import { CreateUserUseCase } from "@modules/users/useCases/CreateUserUseCase";
 import { Controller, Post } from "@overnightjs/core";
-
-import { IUserDto } from "../dtos/IUserDto";
-import { AuthenticateUserUseCase } from "../useCases/AuthenticateUserUseCase";
 
 @Controller("users")
 export class UsersController {

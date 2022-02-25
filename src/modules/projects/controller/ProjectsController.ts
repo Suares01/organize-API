@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 
+import { authUserMiddleware } from "@middleware/auth/authUser";
+import { IProjectDto } from "@modules/projects/dtos/IProjectDto";
+import { CreateProjectUseCase } from "@modules/projects/useCases/CreateProjectUseCase";
 import { ClassMiddleware, Controller, Post } from "@overnightjs/core";
-import { authUserMiddleware } from "@src/middleware/auth/authUser";
-
-import { IProjectDto } from "../dtos/IProjectDto";
-import { CreateProjectUseCase } from "../useCases/CreateProjectUseCase";
 
 @Controller("projects")
 @ClassMiddleware(authUserMiddleware)

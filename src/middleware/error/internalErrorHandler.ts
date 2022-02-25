@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
-import { ApiError } from "@src/shared/errors/ApiError";
-import { InternalError } from "@src/shared/errors/internalErrors/InternalError";
+import { ApiError } from "@shared/errors/ApiError";
+import { InternalError } from "@shared/errors/internalErrors/InternalError";
 
 export function internalErrorHandler(
   error: unknown,

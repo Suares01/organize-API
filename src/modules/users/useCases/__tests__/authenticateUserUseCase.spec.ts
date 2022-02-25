@@ -3,7 +3,7 @@ import "reflect-metadata";
 import bcrypt from "bcrypt";
 
 import { UsersRepository } from "@modules/users/repositories/implementations/UsersRepository";
-import { UnauthorizedError } from "@src/shared/errors/internalErrors/UnauthorizedError";
+import { UnauthorizedError } from "@shared/errors/internalErrors/UnauthorizedError";
 
 import { IUser } from "../../models/User";
 import { AuthenticateUserUseCase } from "../AuthenticateUserUseCase";
