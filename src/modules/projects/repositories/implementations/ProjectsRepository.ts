@@ -1,6 +1,9 @@
 import { IProjectDto } from "@modules/projects/dtos/IProjectDto";
 import { IProject, Project } from "@modules/projects/models/Project";
-import { IProjectsRepository } from "@modules/projects/repositories/IProjectsRepository";
+import {
+  IFindOne,
+  IProjectsRepository,
+} from "@modules/projects/repositories/IProjectsRepository";
 
 export class ProjectsRepository implements IProjectsRepository {
   async insert(data: IProjectDto): Promise<IProject> {
@@ -11,7 +14,7 @@ export class ProjectsRepository implements IProjectsRepository {
     return project;
   }
 
-  async findOne(data: IProjectDto): Promise<IProject | null> {
+  async findOne(data: IFindOne): Promise<IProject | null> {
     const project = await Project.findOne({
       name: data.name,
       user_id: data.user_id,
