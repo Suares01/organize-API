@@ -9,7 +9,7 @@ import { generateJwt } from "@shared/util/token";
 describe("User integration tests", () => {
   let token: string;
 
-  const newProject: IProjectDto = {
+  const defalutProject: IProjectDto = {
     name: "new-api",
     path: "path/example",
   };
@@ -44,19 +44,14 @@ describe("User integration tests", () => {
 
   describe("when creating a new project", () => {
     it("shoud successfully create a new project", async () => {
-      const defalutUser: IUserDto = {
+      const newUser: IUserDto = {
         username: "Jhon Doe 2",
         password: "123",
       };
 
-      const user = await new User(defalutUser).save();
+      const user = await new User(newUser).save();
 
-      const newProject: IProjectDto = {
-        name: "new-api",
-        path: "path/example",
-      };
-
-      const JhonDoetoken = await generateJwt(
+      const newUserToken = await generateJwt(
         {
           username: user.username,
           created_at: user.created_at,
@@ -69,11 +64,11 @@ describe("User integration tests", () => {
 
       const { body, status } = await global.testRequest
         .post("/projects")
-        .set({ "x-access-token": JhonDoetoken })
-        .send(newProject);
+        .set({ "x-access-token": newUserToken })
+        .send(defalutProject);
 
       const project = await new ProjectsRepository().findOne({
-        ...newProject,
+        name: defalutProject.name,
         user_id: user.id,
       });
 
@@ -85,11 +80,11 @@ describe("User integration tests", () => {
       await global.testRequest
         .post("/projects")
         .set({ "x-access-token": token })
-        .send(newProject);
+        .send(defalutProject);
       const { body, status } = await global.testRequest
         .post("/projects")
         .set({ "x-access-token": token })
-        .send(newProject);
+        .send(defalutProject);
 
       expect(status).toBe(409);
       expect(body).toEqual<IApiErrorResponse>({
@@ -104,7 +99,7 @@ describe("User integration tests", () => {
         .post("/projects")
         .set({ "x-access-token": token })
         .send({
-          path: newProject.path,
+          path: defalutProject.path,
         });
 
       expect(status).toBe(422);
@@ -136,21 +131,19 @@ describe("User integration tests", () => {
         { subject: jack.id }
       );
 
-      const { body: paulBody /* status: paulStatus */ } =
-        await global.testRequest
-          .post("/projects")
-          .set({ "x-access-token": paulToken })
-          .send(newProject);
+      const { body: paulBody, status: paulStatus } = await global.testRequest
+        .post("/projects")
+        .set({ "x-access-token": paulToken })
+        .send(defalutProject);
 
-      const { body: jackBody /* status: jackStatus */ } =
-        await global.testRequest
-          .post("/projects")
-          .set({ "x-access-token": jackToken })
-          .send(newProject);
+      const { body: jackBody, status: jackStatus } = await global.testRequest
+        .post("/projects")
+        .set({ "x-access-token": jackToken })
+        .send(defalutProject);
 
-      // expect(paulStatus && jackStatus).toBe(201);
+      expect(paulStatus && jackStatus).toBe(201);
       expect(paulBody && jackBody).toEqual(
-        expect.objectContaining({ name: "new-api", path: "path/example" })
+        expect.objectContaining(defalutProject)
       );
     });
   });
