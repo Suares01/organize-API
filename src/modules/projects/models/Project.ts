@@ -4,16 +4,16 @@ export interface IProject {
   id?: string;
   name: string;
   path: string;
-  user_id: string;
+  user_id: string | Schema.Types.ObjectId;
   created_at: Date;
 }
 
 export interface IProjectModel extends Omit<IProject, "id">, Document {}
 
-const schema = new Schema(
+const schema = new Schema<IProjectModel>(
   {
-    name: { type: String, required: true },
-    path: { type: String, required: true },
+    path: { type: String, required: true, index: false, unique: false },
+    name: { type: String, required: true, index: false, unique: false },
     user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
     created_at: { type: Date, default: new Date() },
   },
