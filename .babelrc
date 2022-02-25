@@ -16,10 +16,11 @@
       "module-resolver",
       {
         "alias": {
-          "@src": "./src",
+          "@shared": "./src/shared",
           "@modules": "./src/modules",
           "@config": "./config",
-          "@tests": "./tests"
+          "@tests": "./tests",
+          "@middleware": "./src/middleware"
         }
       }
     ],

@@ -23,9 +23,6 @@
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
-      "@src/*": [
-        "./src/*"
-      ],
       "@modules/*": [
         "./src/modules/*"
       ],
@@ -34,6 +31,12 @@
       ],
       "@tests/*": [
         "./tests/*"
+      ],
+      "@shared/*": [
+        "./src/shared/*"
+      ],
+      "@middleware/*": [
+        "./src/middleware/*"
       ]
     },
     "rootDirs": [
