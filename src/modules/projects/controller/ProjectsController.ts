@@ -4,7 +4,8 @@ import { container } from "tsyringe";
 import { authUserMiddleware } from "@middleware/auth/authUser";
 import { IProjectDto } from "@modules/projects/dtos/IProjectDto";
 import { CreateProjectUseCase } from "@modules/projects/useCases/CreateProjectUseCase";
-import { ClassMiddleware, Controller, Post } from "@overnightjs/core";
+import { ListAllProjectsUseCase } from "@modules/projects/useCases/ListAllProjectsUseCase";
+import { ClassMiddleware, Controller, Get, Post } from "@overnightjs/core";
 
 @Controller("projects")
 @ClassMiddleware(authUserMiddleware)
@@ -19,5 +20,16 @@ export class ProjectsController {
       .execute({ name, path, user_id: id });
 
     return res.status(201).send(project);
+  }
+
+  @Get("")
+  async list(req: Request, res: Response): Promise<Response> {
+    const { id } = req.user;
+
+    const listOfProjects = await container
+      .resolve(ListAllProjectsUseCase)
+      .execute(id);
+
+    return res.send(listOfProjects);
   }
 }
