@@ -11,7 +11,7 @@ describe("User integration tests", () => {
 
   const defalutProject: IProjectDto = {
     name: "new-api",
-    path: "path/example",
+    path: "path/example/new-api",
   };
 
   const defalutUser: IUserDto = {
@@ -145,6 +145,68 @@ describe("User integration tests", () => {
       expect(paulBody && jackBody).toEqual(
         expect.objectContaining(defalutProject)
       );
+    });
+  });
+
+  describe("when searching for projects in the database", () => {
+    it("should list all projects from a user in the /projects endpoint", async () => {
+      const { body: newApi } = await global.testRequest
+        .post("/projects")
+        .set({ "x-access-token": token })
+        .send(defalutProject);
+
+      const { body: newApi2 } = await global.testRequest
+        .post("/projects")
+        .set({ "x-access-token": token })
+        .send({ name: "new-api_2", path: "path/example/new-api_2" });
+
+      const { body, status } = await global.testRequest
+        .get("/projects")
+        .set({
+          "x-access-token": token,
+        })
+        .send();
+
+      expect(status).toBe(200);
+      expect(body).toEqual([newApi, newApi2]);
+    });
+
+    it("should return a specific project from a user in the /projects/:name endpoint", async () => {
+      await global.testRequest
+        .post("/projects")
+        .set({ "x-access-token": token })
+        .send(defalutProject);
+
+      const { body: newApi2 } = await global.testRequest
+        .post("/projects")
+        .set({ "x-access-token": token })
+        .send({ name: "new-api_2", path: "path/example/new-api_2" });
+
+      const { body, status } = await global.testRequest
+        .get("/projects/new-api_2")
+        .set({
+          "x-access-token": token,
+        })
+        .send();
+
+      expect(status).toBe(200);
+      expect(body).toEqual(newApi2);
+    });
+
+    it("should return 404 when the specific project does not exists", async () => {
+      const { body, status } = await global.testRequest
+        .get("/projects/new-api")
+        .set({
+          "x-access-token": token,
+        })
+        .send();
+
+      expect(status).toBe(404);
+      expect(body).toEqual<IApiErrorResponse>({
+        code: 404,
+        error: "Not Found",
+        message: 'Project "new-api" does not exists',
+      });
     });
   });
 });
