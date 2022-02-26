@@ -1,0 +1,531 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Organize API",
+    "version": "1.0.0",
+    "description": "API of organize project, a tool for you to create, open and organize your projects.",
+    "license": {
+      "name": "MIT License",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Users endpoints"
+    },
+    {
+      "name": "Projects",
+      "description": "Projects endpoint"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create a new user",
+        "description": "This route is responsible to create a new user and return your information without the password.",
+        "parameters": [],
+        "requestBody": {
+          "description": "The request body receive two information: <strong>username</strong> and <strong>password</strong>. It is important to note that the username cannot be the same as that of another user.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqUser"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User has been created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resUser"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "User validation failed: username: already exists",
+                  "code": 409,
+                  "error": "Conflict"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "User validation failed: username: Path `username` is required.",
+                  "code": 422,
+                  "error": "Unprocessable Entity"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/users/authenticate": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Authenticate a user",
+        "description": "This route is responsible for authenticating the user to the API and returning a JWT token.",
+        "parameters": [],
+        "requestBody": {
+          "description": "The request body receive two information: <strong>username</strong> and <strong>password</strong>. This information will be used to authenticate the user, if they are correct a JWT token will be returned.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqUser"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User has been authenticated with success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/token"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "username or password incorrect",
+                  "code": 401,
+                  "error": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/projects": {
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Create a new project",
+        "description": "This route is responsible to create a new project and return your information.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-access-token"
+          }
+        ],
+        "requestBody": {
+          "description": "The request body receive two information: <strong>name</strong> and <strong>path</strong> of the project.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqProject"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Project has been created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resProject"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_user_middleware"
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Project already exists",
+                  "code": 409,
+                  "error": "Conflict"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Project validation failed: name: Path `name` is required.",
+                  "code": 422,
+                  "error": "Unprocessable Entity"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "List all user projects",
+        "description": "This route is responsible to list all projects of the user.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-access-token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All user projects has been listed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/lisOfProjects"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_user_middleware"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/projects/{name}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Return a specific proejct",
+        "description": "This route is responsible for returning a specific project using the project name provided by the user.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-access-token"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "This parameter receive the name of the project",
+            "schema": {
+              "type": "string",
+              "example": "new_API"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project has been returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resProject"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "This route may return two different 404 errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": [
+                  {
+                    "summary": "Project not found",
+                    "description": "Occurs when the project does not exist",
+                    "value": {
+                      "message": "Project 'new-api' does not exists",
+                      "code": 404,
+                      "error": "Not Found"
+                    }
+                  },
+                  {
+                    "summary": "User not found",
+                    "description": "This error occurs because the middleware that takes the user's token checks if the user is registered, if not, it returns a 404 error.",
+                    "value": {
+                      "message": "User not found",
+                      "code": 404,
+                      "error": "Not Found"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "id": {
+        "type": "string",
+        "example": "621a38b90ed8461864b44c8a"
+      },
+      "username": {
+        "type": "string",
+        "example": "Jhon Doe"
+      },
+      "password": {
+        "type": "string",
+        "example": "123456@Doe"
+      },
+      "created_at": {
+        "type": "string",
+        "example": "2022-02-26T14:26:55.843Z"
+      },
+      "token": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpob24gRG9lIiwiY3JlYXRlZF9hdCI6IjIwMjItMDItMjZUMTQ6MjY6NTUuODQzWiIsImlhdCI6MTY0NTg4NzQ0NCwiZXhwIjoxNjQ1OTczODQ0LCJzdWIiOiI2MjFhMzhiOTBlZDg0NjE4NjRiNDRjOGEifQ.PkirWn_Z27fzHXLs6yhQviN-eVIkFmUYXWGYjrPmBEE"
+          }
+        }
+      },
+      "reqUser": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "$ref": "#/components/schemas/username"
+          },
+          "password": {
+            "$ref": "#/components/schemas/password"
+          }
+        }
+      },
+      "resUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "username": {
+            "$ref": "#/components/schemas/username"
+          },
+          "created_at": {
+            "$ref": "#/components/schemas/created_at"
+          }
+        }
+      },
+      "projectName": {
+        "type": "string",
+        "example": "new_API"
+      },
+      "projectPath": {
+        "type": "string",
+        "example": "home/user/projects/new_API"
+      },
+      "reqProject": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/projectName"
+          },
+          "path": {
+            "$ref": "#/components/schemas/projectPath"
+          }
+        }
+      },
+      "resProject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "621a6dd5e4530db933972c6e"
+          },
+          "name": {
+            "$ref": "#/components/schemas/projectName"
+          },
+          "path": {
+            "$ref": "#/components/schemas/projectPath"
+          },
+          "user_id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "created_at": {
+            "$ref": "#/components/schemas/created_at"
+          }
+        }
+      },
+      "lisOfProjects": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/resProject"
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "number"
+          },
+          "error": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "documentation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "responses": {
+      "500": {
+        "description": "Something went wrong",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "Something went wrong",
+              "code": 500,
+              "error": "Internal Server Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "This route may return three different 401 errors.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "examples": [
+              {
+                "summary": "invalid signature",
+                "description": "Occurs when the token expires",
+                "value": {
+                  "message": "invalid signature",
+                  "code": 401,
+                  "error": "Unauthorized"
+                }
+              },
+              {
+                "summary": "jwt must be provided",
+                "description": "Occurs when token is not provided",
+                "value": {
+                  "message": "jwt must be provided",
+                  "code": 401,
+                  "error": "Unauthorized"
+                }
+              },
+              {
+                "summary": "invalid token",
+                "description": "Occurs when a token is invalid",
+                "value": {
+                  "message": "invalid token",
+                  "code": 401,
+                  "error": "Unauthorized"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "404_user_middleware": {
+        "description": "This error occurs because the middleware that takes the user's token checks if the user is registered, if not, it returns a 404 error.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "User not found",
+              "code": 404,
+              "error": "Not Found"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "x-access-token": {
+        "name": "x-access-token",
+        "in": "header",
+        "description": "The parameter x-access-token must contain the user token",
+        "schema": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpob24gRG9lIiwiY3JlYXRlZF9hdCI6IjIwMjItMDItMjZUMTQ6MjY6NTUuODQzWiIsImlhdCI6MTY0NTg4NzQ0NCwiZXhwIjoxNjQ1OTczODQ0LCJzdWIiOiI2MjFhMzhiOTBlZDg0NjE4NjRiNDRjOGEifQ.PkirWn_Z27fzHXLs6yhQviN-eVIkFmUYXWGYjrPmBEE"
+        },
+        "required": true
+      }
+    }
+  }
+}
