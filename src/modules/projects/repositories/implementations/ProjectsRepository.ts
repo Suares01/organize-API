@@ -6,7 +6,7 @@ import {
 } from "@modules/projects/repositories/IProjectsRepository";
 
 export class ProjectsRepository implements IProjectsRepository {
-  async insert(data: IProjectDto): Promise<IProject> {
+  public async insert(data: IProjectDto): Promise<IProject> {
     const newProject = new Project(data);
 
     const project = await newProject.save();
@@ -14,12 +14,20 @@ export class ProjectsRepository implements IProjectsRepository {
     return project;
   }
 
-  async findOne(data: IFindOne): Promise<IProject | null> {
+  public async findOne(data: IFindOne): Promise<IProject | null> {
     const project = await Project.findOne({
       name: data.name,
       user_id: data.user_id,
     });
 
     return project;
+  }
+
+  public async findAll(userId: string): Promise<IProject[]> {
+    const projects = await Project.find({
+      user_id: userId,
+    });
+
+    return projects;
   }
 }

@@ -9,4 +9,5 @@ export interface IFindOne {
 export interface IProjectsRepository {
   insert(data: IProjectDto): Promise<IProject>;
   findOne(data: IFindOne): Promise<IProject | null>;
+  findAll(userId: string): Promise<IProject[]>;
 }
