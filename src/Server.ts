@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import config from "config";
 import expressPino from "express-pino-logger";
 import * as http from "http";
+import { serve, setup } from "swagger-ui-express";
 
 import { Logger } from "@config/types";
 import { errorHandler } from "@middleware/error/errorHandler";
@@ -16,6 +17,7 @@ import { Server } from "@overnightjs/core";
 import logger from "@shared/logger/logger";
 
 import * as database from "./database/index";
+import docs from "./docs/docs.openapi.json";
 
 export class SetupServer extends Server {
   constructor(private port = config.get<number>("App.port")) {
@@ -28,6 +30,7 @@ export class SetupServer extends Server {
 
   public async initServer(): Promise<void> {
     this.setupExpress();
+    await this.setupDocs();
     this.setupControllers();
     await this.setupDatabase();
     this.setupErrorHandler();
@@ -42,6 +45,10 @@ export class SetupServer extends Server {
         level: this.logConfig.level,
       })
     );
+  }
+
+  private async setupDocs(): Promise<void> {
+    this.app.use("/docs", serve, setup(docs));
   }
 
   private setupControllers(): void {
