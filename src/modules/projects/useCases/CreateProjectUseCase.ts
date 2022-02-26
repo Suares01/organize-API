@@ -13,7 +13,10 @@ export class CreateProjectUseCase {
   ) {}
 
   async execute(data: IProjectDto): Promise<IProject> {
-    const projectAlreadyExists = await this.projectsRepository.findOne(data);
+    const projectAlreadyExists = await this.projectsRepository.findOne({
+      name: data.name,
+      user_id: `${data.user_id}`,
+    });
 
     if (projectAlreadyExists) throw new ConflictError("Project already exists");
 
