@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { container } from "tsyringe";
 
 import { UsersRepository } from "@modules/users/repositories/implementations/UsersRepository";
+import { NotFoundError } from "@shared/errors/internalErrors/NotFoundError";
 import { UnauthorizedError } from "@shared/errors/internalErrors/UnauthorizedError";
 import { verifyJwt } from "@shared/util/token";
 
@@ -26,7 +27,7 @@ export async function authUserMiddleware(
 
     const user = await usersRepository.findOne({ id: userId });
 
-    if (!user) throw new UnauthorizedError("User not found");
+    if (!user) throw new NotFoundError("User not found");
 
     req.user = {
       id: userId,
