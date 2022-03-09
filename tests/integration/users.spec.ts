@@ -1,6 +1,7 @@
 import { IUser, User } from "@modules/users/models/User";
 import { UsersRepository } from "@modules/users/repositories/implementations/UsersRepository";
 import { IApiErrorResponse } from "@shared/errors/IApiError";
+import { generateJwt } from "@shared/util/token";
 
 describe("User integration tests", () => {
   beforeEach(async () => await User.deleteMany());
@@ -117,6 +118,60 @@ describe("User integration tests", () => {
         code: 401,
         error: "Unauthorized",
         message: "username or password incorrect",
+      });
+    });
+  });
+
+  describe("when getting user info", () => {
+    it("should return the user info with success", async () => {
+      const {
+        id,
+        username,
+        created_at: createdAt,
+      } = await new User(newUser).save();
+
+      const token = await generateJwt(
+        {},
+        {
+          subject: id,
+        }
+      );
+
+      const { body, status } = await testRequest
+        .get("/users/me")
+        .set({ "x-access-token": token });
+
+      expect(status).toBe(200);
+      expect(body).toMatchObject(
+        JSON.parse(
+          JSON.stringify({
+            id,
+            username,
+            created_at: createdAt,
+          })
+        )
+      );
+    });
+
+    it("should return Not Found error when the user is not found", async () => {
+      const { id } = new User(newUser);
+
+      const token = await generateJwt(
+        {},
+        {
+          subject: id,
+        }
+      );
+
+      const { body, status } = await testRequest
+        .get("/users/me")
+        .set({ "x-access-token": token });
+
+      expect(status).toBe(404);
+      expect(body).toEqual<IApiErrorResponse>({
+        code: 404,
+        error: "Not Found",
+        message: "User not found",
       });
     });
   });
