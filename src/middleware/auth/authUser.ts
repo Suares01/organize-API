@@ -20,21 +20,24 @@ export async function authUserMiddleware(
   if (!token || typeof token !== "string")
     throw new UnauthorizedError("jwt must be provided");
 
+  let id: string;
+
   try {
     const { sub: userId } = (await verifyJwt(token)) as IPayLoad;
 
-    const usersRepository = container.resolve(UsersRepository);
-
-    const user = await usersRepository.findOne({ id: userId });
-
-    if (!user) throw new NotFoundError("User not found");
-
-    req.user = {
-      id: userId,
-    };
-
-    next();
+    id = userId;
   } catch (error: any) {
     throw new UnauthorizedError(error.message);
   }
+  const usersRepository = container.resolve(UsersRepository);
+
+  const user = await usersRepository.findOne({ id });
+
+  if (!user) throw new NotFoundError("User not found");
+
+  req.user = {
+    id,
+  };
+
+  next();
 }
