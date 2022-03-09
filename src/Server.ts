@@ -3,6 +3,7 @@ import "@shared/container/index";
 import "express-async-errors";
 import bodyParser from "body-parser";
 import config from "config";
+import cors from "cors";
 import expressPino from "express-pino-logger";
 import * as http from "http";
 import { serve, setup } from "swagger-ui-express";
@@ -43,6 +44,11 @@ export class SetupServer extends Server {
       expressPino({
         enabled: this.logConfig.enabled,
         level: this.logConfig.level,
+      })
+    );
+    this.app.use(
+      cors({
+        origin: "*",
       })
     );
   }
