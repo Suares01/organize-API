@@ -143,6 +143,39 @@
         }
       }
     },
+    "/users/me": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get user information",
+        "description": "This route is responsible to return the user information.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-access-token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User information was successfully returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resUser"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_user_middleware"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
     "/projects": {
       "post": {
         "tags": [
