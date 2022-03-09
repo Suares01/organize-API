@@ -15,7 +15,7 @@
     "start": "pm2-runtime start ecosystem.config.js --env production"
   },
   "engines": {
-    "node": "16.13.1"
+    "node": "16.14.0"
   },
   "repository": {
     "type": "git",
