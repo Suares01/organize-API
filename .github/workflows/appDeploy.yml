@@ -1,0 +1,48 @@
+name: App Deploy
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+    - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.14.0]
+        mongodb-version: [5.0]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Start mongodb
+        uses: supercharge/mongodb-github-action@1.1.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Run tests
+        env:
+          TOKEN_SECRET: ${{ secrets.TOKEN_SECRET }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: yarn test
+
+      - name: Deploy
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: "api-organize"
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
